@@ -1,8 +1,14 @@
 package com.edu.seiryo.mapper;
 
 import com.edu.seiryo.pojo.PurchaseListGoods;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -14,5 +20,9 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface PurchaseListGoodsMapper extends BaseMapper<PurchaseListGoods> {
-
+	
+	IPage<PurchaseListGoods> selectPurchaseListGoodsPage(
+	        Page<PurchaseListGoods> page,
+	        @Param("ew") Wrapper<PurchaseListGoods> wrapper
+	);
 }

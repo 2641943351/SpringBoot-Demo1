@@ -2,4 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.seiryo.mapper.PurchaseListGoodsMapper">
 
+	<select id="selectPurchaseListGoodsPage"
+        resultType="com.edu.seiryo.pojo.PurchaseListGoods">
+	
+	    SELECT
+	        p.id,
+	        p.purchase_list_id,
+	        p.goods_id,
+	        p.num,
+	        p.price,
+	        p.total,
+	        p.type_id,
+	
+	        g.code AS code,
+	        g.name AS name,
+	        g.model AS model,
+	        g.unit AS unit
+	
+	    FROM t_purchase_list_goods p
+	
+	    LEFT JOIN t_goods g
+	    ON p.goods_id = g.id
+	
+	    <where>
+	        ${ew.sqlSegment}
+	    </where>
+	
+	</select>
 </mapper>

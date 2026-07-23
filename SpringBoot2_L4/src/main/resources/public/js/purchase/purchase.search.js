@@ -111,8 +111,11 @@ layui.use(['laydate','table','layer'],function() {
 
 
     var tableIns02 = table.render({
-        elem: '#purchaseListGoods',
-        url: ctx + '/purchaseListGoods/list',
+    	elem: '#purchaseListGoods',
+	    url: ctx + '/purchaseListGoods/list',
+	    where:{
+	    	purchaseListId:""
+	    },
         height: "full-125",
         page : true,
         limits : [10,15,20,25],

@@ -1,6 +1,9 @@
 package com.edu.seiryo.service;
 
 import com.edu.seiryo.pojo.PurchaseListGoods;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.edu.seiryo.query.PurchaseListGoodsQuery;
 
@@ -13,4 +16,6 @@ import java.util.Map;
  */
 public interface PurchaseListGoodsService extends IService<PurchaseListGoods> {
 
+	IPage<PurchaseListGoods> selectPurchaseListGoodsPage(Page<PurchaseListGoods> page,Wrapper<PurchaseListGoods> wrapper);
+	
 }

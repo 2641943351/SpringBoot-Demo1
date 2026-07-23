@@ -1,5 +1,6 @@
 package com.edu.seiryo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,4 +25,9 @@ import java.util.Map;
 @Service
 public class PurchaseListGoodsServiceImpl extends ServiceImpl<PurchaseListGoodsMapper, PurchaseListGoods> implements PurchaseListGoodsService {
 
+	@Override
+	public IPage<PurchaseListGoods> selectPurchaseListGoodsPage(Page<PurchaseListGoods> page,Wrapper<PurchaseListGoods> wrapper) {
+	    return baseMapper.selectPurchaseListGoodsPage(page, wrapper);
+	}
+	
 }

@@ -1,5 +1,6 @@
 package com.edu.seiryo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -40,6 +41,9 @@ import java.util.Map;
 @Service
 public class PurchaseListServiceImpl extends ServiceImpl<PurchaseListMapper, PurchaseList> implements PurchaseListService {
 
+	@Autowired
+	private PurchaseListMapper purchaseListMapper;
+	
 	// 生成单号方法
 	@Override
 	public String createPurchaseNumber() {
@@ -58,6 +62,12 @@ public class PurchaseListServiceImpl extends ServiceImpl<PurchaseListMapper, Pur
 	    String serialNumber = String.format("%03d", count + 1);
 
 	    return "JH" + date + serialNumber;
+	}
+	
+	@Override
+	public IPage<PurchaseList> selectPurchaseListPage(Page<PurchaseList> page,Wrapper<PurchaseList> queryWrapper) {
+		
+	    return purchaseListMapper.selectPurchaseListPage(page,queryWrapper);
 	}
 
 }

@@ -2,6 +2,7 @@ package com.edu.seiryo.controller;
 
 import com.edu.seiryo.model.GoodsModel;
 import com.edu.seiryo.pojo.Goods;
+import com.edu.seiryo.pojo.GoodsType;
 import com.edu.seiryo.query.GoodsQuery;
 import com.edu.seiryo.service.GoodsService;
 import com.edu.seiryo.service.GoodsTypeService;
@@ -71,6 +72,23 @@ public class CommonController {
      */
     @RequestMapping("toUpdateGoodsInfoPage")
     public String toUpdateGoodsInfoPage(GoodsModel goodsModel, Model model){
+    	
+    	Goods goods = goodsService.getById(goodsModel.getId());
+    	// 编辑时保留进货数量和价格
+    	goods.setNum(goodsModel.getNum());
+    	goods.setLastPurchasingPrice(goodsModel.getPrice());
+    	
+    	GoodsType goodsType = goodsTypeService.getById(goods.getTypeId());
+    	// 查询商品类别
+        if(goods.getTypeId()!=null){
+        	goods.setTypeName(goodsType.getName());
+        }
+        // 商品单位直接使用goods表中的unit字段
+        goods.setUnitName(goods.getUnit());
+        
+        model.addAttribute("goods", goods);
+        model.addAttribute("flag", 1);
+        
         return "common/goods_add_update";
     }
 

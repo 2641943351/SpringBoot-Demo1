@@ -1,0 +1,4 @@
+jxc_oracle.sql
+通过AI，将MySql转换为Oracle的可执行SQL
+因为条目过多，转换后可能存在信息略微乱码的情况
+但总体结构与字段是一致的

@@ -37,5 +37,53 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 	    return removeById(id);
 	}
 	
+	@Override
+	public void updateMenu(Menu menu) {
+
+	    // 查询修改前的菜单
+	    Menu oldMenu = getById(menu.getId());
+
+	    // 计算层级变化
+	    int change = menu.getGrade() - oldMenu.getGrade();
+
+	    // 修改当前菜单
+	    updateById(menu);
+
+	    // 修改子菜单层级
+	    if(change != 0){
+	        updateChildGrade(menu.getId(), change);
+	    }
+	}
+	
+	/**
+	 * 修改子菜单层级
+	 */
+	private void updateChildGrade(Integer parentId, int change) {
+
+	    QueryWrapper<Menu> wrapper = new QueryWrapper<>();
+	    wrapper.eq("p_id", parentId);
+
+	    List<Menu> children = list(wrapper);
+
+	    for (Menu child : children) {
+
+	        int newGrade = child.getGrade() + change;
+
+	        // 最大三级，最小一级
+	        if (newGrade > 2) {
+	            newGrade = 2;
+	        }
+	        if (newGrade < 0) {
+	            newGrade = 0;
+	        }
+
+	        child.setGrade(newGrade);
+
+	        updateById(child);
+
+	        // 继续处理孙菜单
+	        updateChildGrade(child.getId(), change);
+	    }
+	}
 }
 

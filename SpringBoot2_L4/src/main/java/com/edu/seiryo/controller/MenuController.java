@@ -84,11 +84,9 @@ public class MenuController {
 	@ResponseBody
 	public RespBean update(Menu menu) {
 
-	    if(menuService.updateById(menu)){
-	        return RespBean.success("修改成功");
-	    }
+	    menuService.updateMenu(menu);
 
-	    return RespBean.error("修改失败");
+	    return RespBean.success("修改成功");
 	}
 	
 	@PreAuthorize("hasAnyAuthority('1030')")

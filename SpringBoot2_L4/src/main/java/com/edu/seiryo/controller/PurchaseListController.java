@@ -190,14 +190,16 @@ public class PurchaseListController {
     @ResponseBody
     public Map<String,Object> countPurchase(PurchaseListQuery query){
 
-        List<Map<String,Object>> list = purchaseListService.countPurchase(query);
+        Page<Map<String,Object>> page = new Page<>(query.getPage(), query.getLimit());
+
+        IPage<Map<String,Object>> result = purchaseListService.countPurchase(page, query);
 
         Map<String,Object> map=new HashMap<>();
 
         map.put("code",0);
         map.put("msg","");
-        map.put("count",list.size());
-        map.put("data",list);
+        map.put("count",result.getTotal());
+        map.put("data",result.getRecords());
 
         return map;
     }

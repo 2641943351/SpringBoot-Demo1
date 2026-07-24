@@ -24,6 +24,6 @@ public interface PurchaseListMapper extends BaseMapper<PurchaseList> {
 
 	IPage<PurchaseList> selectPurchaseListPage(Page<PurchaseList> page,@Param(Constants.WRAPPER) Wrapper<PurchaseList> wrapper);
 	
-	List<Map<String,Object>> countPurchase(PurchaseListQuery query);
+	IPage<Map<String,Object>> countPurchase(Page<Map<String,Object>> page,@Param("query") PurchaseListQuery query);
 	
 }

@@ -94,7 +94,7 @@ public class MenuController {
 	@ResponseBody
 	public RespBean delete(Integer id){
 
-	    if(menuService.removeById(id)){
+	    if(menuService.deleteMenu(id)){
 	        return RespBean.success("删除成功");
 	    }
 

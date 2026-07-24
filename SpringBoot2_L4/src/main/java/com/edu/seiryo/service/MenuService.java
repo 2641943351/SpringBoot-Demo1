@@ -20,5 +20,7 @@ public interface MenuService extends IService<Menu> {
      * 查询所有菜单（树形）
      */
     List<TreeDto> listAllMenu();
+    
+    boolean deleteMenu(Integer id);
 	
 }

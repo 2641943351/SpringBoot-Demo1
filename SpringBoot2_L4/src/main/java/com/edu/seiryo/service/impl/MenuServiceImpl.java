@@ -24,5 +24,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return baseMapper.listAllMenu();
     }
 	
+	@Override
+	public boolean deleteMenu(Integer id) {
+
+	    QueryWrapper<Menu> wrapper = new QueryWrapper<>();
+	    wrapper.eq("p_id", id);
+
+	    Integer count = count(wrapper);
+
+	    AssertUtil.isTrue(count > 0, "存在子级菜单，无法删除");
+
+	    return removeById(id);
+	}
+	
 }
 

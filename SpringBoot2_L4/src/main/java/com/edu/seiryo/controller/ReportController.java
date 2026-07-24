@@ -1,7 +1,12 @@
 package com.edu.seiryo.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 统计报表
@@ -23,10 +28,7 @@ public class ReportController {
         return "count/customer";
     }
 
-    /**
-     * 商品采购统计
-     * @return
-     */
+    // 商品采购统计页面
     @RequestMapping("countPurchase")
     public String countPurchase(){
         return "count/purchase";
@@ -59,7 +61,5 @@ public class ReportController {
     public String countMonthSale(){
         return "count/month_sale";
     }
-
-
 
 }

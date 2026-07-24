@@ -18,4 +18,59 @@
 		
 	</select>
 	
+	<select id="countPurchase" resultType="map">
+
+	    SELECT
+	        pl.purchase_number AS "number",
+	        TO_CHAR(pl.purchase_date,'YYYY-MM-DD') AS "date",
+	
+	        pl.supplier_id AS "name",
+	
+	        plg.code AS "code",
+	        plg.name AS "goodsName",
+	        plg.model AS "model",
+	
+	        gt.name AS "typeName",
+	
+	        plg.price AS "price",
+	        plg.num AS "num",
+	        plg.unit AS "unitName",
+	        plg.total AS "total"
+	
+	    FROM t_purchase_list pl
+	
+	    LEFT JOIN t_purchase_list_goods plg
+	        ON pl.id = plg.purchase_list_id
+	
+	    LEFT JOIN t_goods_type gt
+	        ON plg.type_id = gt.id
+	
+	
+	    <where>
+	
+	        <if test="goodsName != null and goodsName != ''">
+	            AND plg.name LIKE '%' || #{goodsName} || '%'
+	        </if>
+	
+	
+	        <if test="typeId != null">
+	            AND plg.type_id = #{typeId}
+	        </if>
+	
+	
+	        <if test="startDate != null and startDate != ''">
+	            AND pl.purchase_date &gt;=
+	            TO_DATE(#{startDate},'YYYY-MM-DD')
+	        </if>
+	
+	
+	        <if test="endDate != null and endDate != ''">
+	            AND pl.purchase_date &lt;
+	            TO_DATE(#{endDate},'YYYY-MM-DD') + 1
+	        </if>
+	
+	    </where>
+	
+	</select>
+	
 </mapper>

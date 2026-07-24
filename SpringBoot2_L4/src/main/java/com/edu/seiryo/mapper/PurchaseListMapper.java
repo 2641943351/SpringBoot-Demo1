@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 进货单接口
@@ -22,5 +23,7 @@ import java.util.List;
 public interface PurchaseListMapper extends BaseMapper<PurchaseList> {
 
 	IPage<PurchaseList> selectPurchaseListPage(Page<PurchaseList> page,@Param(Constants.WRAPPER) Wrapper<PurchaseList> wrapper);
+	
+	List<Map<String,Object>> countPurchase(PurchaseListQuery query);
 	
 }

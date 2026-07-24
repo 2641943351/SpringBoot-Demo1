@@ -22,4 +22,6 @@ public interface PurchaseListService extends IService<PurchaseList> {
 	String createPurchaseNumber();
 	IPage<PurchaseList> selectPurchaseListPage(Page<PurchaseList> page,Wrapper<PurchaseList> wrapper);
 
+	List<Map<String,Object>> countPurchase(PurchaseListQuery query);
+	
 }

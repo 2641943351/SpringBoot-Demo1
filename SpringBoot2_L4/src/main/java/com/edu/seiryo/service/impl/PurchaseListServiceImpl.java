@@ -69,5 +69,12 @@ public class PurchaseListServiceImpl extends ServiceImpl<PurchaseListMapper, Pur
 		
 	    return purchaseListMapper.selectPurchaseListPage(page,queryWrapper);
 	}
+	
+	@Override
+	public List<Map<String,Object>> countPurchase(PurchaseListQuery query){
+
+	    return baseMapper.countPurchase(query);
+
+	}
 
 }

@@ -182,4 +182,23 @@ public class PurchaseListController {
         }
 
     }
+    
+    /**
+     * 商品采购统计列表
+     */
+    @RequestMapping("countPurchase")
+    @ResponseBody
+    public Map<String,Object> countPurchase(PurchaseListQuery query){
+
+        List<Map<String,Object>> list = purchaseListService.countPurchase(query);
+
+        Map<String,Object> map=new HashMap<>();
+
+        map.put("code",0);
+        map.put("msg","");
+        map.put("count",list.size());
+        map.put("data",list);
+
+        return map;
+    }
 }

@@ -7,6 +7,7 @@ import com.edu.seiryo.pojo.Menu;
 import com.edu.seiryo.service.MenuService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,6 +91,7 @@ public class MenuController {
 	    return RespBean.error("修改失败");
 	}
 	
+	@PreAuthorize("hasAnyAuthority('1030')")
 	@RequestMapping("delete")
 	@ResponseBody
 	public RespBean delete(Integer id){

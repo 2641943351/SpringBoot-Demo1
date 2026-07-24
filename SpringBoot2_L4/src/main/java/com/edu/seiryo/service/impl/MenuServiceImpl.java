@@ -40,50 +40,42 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 	@Override
 	public void updateMenu(Menu menu) {
 
-	    // 查询修改前的菜单
-	    Menu oldMenu = getById(menu.getId());
-
-	    // 计算层级变化
-	    int change = menu.getGrade() - oldMenu.getGrade();
-
-	    // 修改当前菜单
+		// 修改当前菜单
 	    updateById(menu);
 
-	    // 修改子菜单层级
-	    if(change != 0){
-	        updateChildGrade(menu.getId(), change);
-	    }
+	    // 根据新的层级重新计算子菜单
+	    updateChildGrade(menu.getId(), menu.getGrade());
+		
 	}
 	
 	/**
-	 * 修改子菜单层级
+	 * 根据父菜单级别更新子菜单
 	 */
-	private void updateChildGrade(Integer parentId, int change) {
+	private void updateChildGrade(Integer parentId, Integer parentGrade) {
 
 	    QueryWrapper<Menu> wrapper = new QueryWrapper<>();
 	    wrapper.eq("p_id", parentId);
 
 	    List<Menu> children = list(wrapper);
 
-	    for (Menu child : children) {
+	    for(Menu child : children){
 
-	        int newGrade = child.getGrade() + change;
+	        // 子菜单等级 = 父菜单等级 + 1
+	        int newGrade = parentGrade + 1;
 
-	        // 最大三级，最小一级
-	        if (newGrade > 2) {
+	        // 最大三级
+	        if(newGrade > 2){
 	            newGrade = 2;
-	        }
-	        if (newGrade < 0) {
-	            newGrade = 0;
 	        }
 
 	        child.setGrade(newGrade);
 
 	        updateById(child);
 
-	        // 继续处理孙菜单
-	        updateChildGrade(child.getId(), change);
+	        //继续处理下级菜单
+	        updateChildGrade(child.getId(), newGrade);
 	    }
 	}
+	
 }
 

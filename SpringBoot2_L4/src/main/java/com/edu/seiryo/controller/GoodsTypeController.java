@@ -34,5 +34,11 @@ public class GoodsTypeController {
     	return goodsTypeService.queryAllGoodsTypes();
 
     }
+    
+    // 跳转商品类别选择页面
+    @RequestMapping("selectPage")
+    public String selectPage(){
+        return "goodsType/select";
+    }
 
 }

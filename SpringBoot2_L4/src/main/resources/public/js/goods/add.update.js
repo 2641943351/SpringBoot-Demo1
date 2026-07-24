@@ -80,6 +80,52 @@ layui.use(['form', 'layer'], function () {
         });
         return false;
     });
+    
+    $(document).on("click","#saveAndNext",function(e){
+
+        e.preventDefault();
+
+        var field = {};
+
+        field.typeId = $("input[name='typeId']").val();
+        field.name = $("input[name='name']").val();
+        field.model = $("input[name='model']").val();
+        field.purchasingPrice = $("input[name='purchasingPrice']").val();
+        field.sellingPrice = $("input[name='sellingPrice']").val();
+        field.minNum = $("input[name='minNum']").val();
+        field.unit = $("#unit").val();
+        field.producer = $("input[name='producer']").val();
+        field.remarks = $("textarea[name='remarks']").val();
+
+
+        $.post(ctx+"/goods/save",field,function(res){
+
+            if(res.code==200){
+
+                layer.msg("保存成功");
+
+                $("input[name='name']").val("");
+                $("input[name='model']").val("");
+                $("input[name='purchasingPrice']").val("");
+                $("input[name='sellingPrice']").val("");
+                $("input[name='minNum']").val("");
+                $("input[name='producer']").val("");
+                $("textarea[name='remarks']").val("");
+
+                $("input[name='typeName']").val("");
+                $("input[name='typeId']").val("");
+
+                $("#unit").val("0");
+
+                form.render("select");
+
+            }else{
+                layer.msg(res.message);
+            }
+
+        });
+
+    });
 
 
     $("#reloadGoodsType").click(function (){

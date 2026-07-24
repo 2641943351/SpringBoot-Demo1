@@ -7,6 +7,7 @@ import com.edu.seiryo.model.RespBean;
 import com.edu.seiryo.pojo.PurchaseList;
 import com.edu.seiryo.query.PurchaseListQuery;
 import com.edu.seiryo.service.PurchaseListService;
+import com.edu.seiryo.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,9 @@ public class PurchaseListController {
 	@Autowired
 	private PurchaseListService purchaseListService;
 
+	@Autowired
+	private UserService userService;
+
 	// 进货入库主页跳转
 	@RequestMapping("index")
 	public String index(Model model){
@@ -49,7 +54,9 @@ public class PurchaseListController {
     // 保存进货单
 	@RequestMapping("save")
 	@ResponseBody
-	public RespBean save(PurchaseList purchaseList, String goodsJson){
+	public RespBean save(PurchaseList purchaseList, String goodsJson, Principal principal){
+
+	    purchaseList.setUserId(userService.findForName(principal.getName()).getId());
 
 	    // 判断供应商
 	    if(purchaseList.getSupplierId() == null || purchaseList.getSupplierId() == 0){

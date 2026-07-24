@@ -19,5 +19,17 @@ import java.util.List;
 @RequestMapping("/goodsUnit")
 public class GoodsUnitController {
 
+	@Resource
+    private GoodsUnitService goodsUnitService;
+
+
+    // 查询所有商品单位
+    @RequestMapping("allGoodsUnits")
+    @ResponseBody
+    public List<GoodsUnit> allGoodsUnits(){
+
+        return goodsUnitService.list();
+
+    }
 
 }

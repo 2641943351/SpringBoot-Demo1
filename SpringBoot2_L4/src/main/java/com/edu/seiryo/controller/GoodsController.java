@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.edu.seiryo.model.RespBean;
 import com.edu.seiryo.pojo.Goods;
+import com.edu.seiryo.pojo.GoodsType;
 import com.edu.seiryo.query.GoodsQuery;
 import com.edu.seiryo.service.GoodsService;
 import com.edu.seiryo.service.GoodsTypeService;
@@ -30,7 +31,16 @@ public class GoodsController {
 
 	@Autowired
     private GoodsService goodsService;
-
+	
+	@Resource
+    private GoodsTypeService goodsTypeService;
+	
+    // 跳转页面
+    @RequestMapping("index")
+    public String index(){
+        return "goods/goods";
+    }
+	
     //	商品列表查询
     @RequestMapping("list")
     @ResponseBody
@@ -50,8 +60,25 @@ public class GoodsController {
         if(goodsQuery.getTypeId()!=null){
             queryWrapper.eq("type_id", goodsQuery.getTypeId());
         }
+        // 排序
+        queryWrapper.orderByAsc("code");
         
         goodsService.page(page,queryWrapper);
+        
+        // 补充非数据库字段
+        for(Goods goods : page.getRecords()){
+
+            // 单位
+            goods.setUnitName(goods.getUnit());
+
+            // 商品类别
+            if(goods.getTypeId()!=null){
+                GoodsType goodsType = goodsTypeService.getById(goods.getTypeId());
+                if(goodsType!=null){
+                    goods.setTypeName(goodsType.getName());
+                }
+            }
+        }
         
         Map<String,Object> map = new HashMap<>();
 
@@ -62,5 +89,101 @@ public class GoodsController {
 
         return map;
     }
-	
+    
+
+    // 删除商品
+    @RequestMapping("delete")
+    @ResponseBody
+    public RespBean delete(Integer id){
+
+        boolean flag = goodsService.removeById(id);
+
+        if(flag){
+            return RespBean.success("删除成功");
+        }else{
+            return RespBean.error("删除失败");
+        }
+    }
+    
+    /**
+     * 跳转添加/修改商品页面
+     */
+    @RequestMapping("addOrUpdateGoodsPage")
+    public String addOrUpdateGoodsPage(Integer typeId, Model model){
+    	if(typeId!=null){
+
+            GoodsType goodsType = goodsTypeService.getById(typeId);
+
+            model.addAttribute("goodsType", goodsType);
+        }
+        return "goods/add_update";
+    }
+    
+    @RequestMapping("toGoodsTypePage")
+    public String toGoodsTypePage(Integer typeId, Model model){
+
+        model.addAttribute("typeId", typeId);
+
+        return "goods/goods_type";
+    }
+
+   	// 添加商品
+    @RequestMapping("save")
+    @ResponseBody
+    public RespBean save(Goods goods){
+    	
+    	// 自动生成商品编码
+    	QueryWrapper<Goods> wrapper = new QueryWrapper<>();
+    	wrapper.orderByDesc("code");
+
+    	Goods lastGoods = goodsService.list(wrapper)
+    	        .stream()
+    	        .findFirst()
+    	        .orElse(null);
+
+        int code = 1;
+
+        if(lastGoods != null && lastGoods.getCode() != null){
+            code = Integer.parseInt(lastGoods.getCode()) + 1;
+        }
+
+        goods.setCode(String.format("%04d", code));
+
+
+    	// 初始库存
+        goods.setInventoryQuantity(0);
+
+        // 上次采购价格
+        goods.setLastPurchasingPrice(goods.getPurchasingPrice());
+
+        // 商品状态
+        goods.setState(0);
+
+        // 未删除
+        goods.setIsDel(0);
+
+        boolean flag = goodsService.save(goods);
+
+        if(flag){
+            return RespBean.success("添加成功");
+        }else{
+            return RespBean.error("添加失败");
+        }
+        
+    }
+    
+
+    // 修改商品
+    @RequestMapping("update")
+    @ResponseBody
+    public RespBean update(Goods goods){
+
+        boolean flag = goodsService.updateById(goods);
+
+        if(flag){
+            return RespBean.success("修改成功");
+        }else{
+            return RespBean.error("修改失败");
+        }
+    }
 }

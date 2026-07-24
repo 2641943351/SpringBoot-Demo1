@@ -1,5 +1,8 @@
 package com.edu.seiryo.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.edu.seiryo.model.GoodsModel;
 import com.edu.seiryo.pojo.Goods;
 import com.edu.seiryo.pojo.GoodsType;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -107,7 +112,55 @@ public class CommonController {
     @RequestMapping("stockList")
     @ResponseBody
     public Map<String,Object> stockLick(GoodsQuery goodsQuery){
-        return null;
+    	
+    	Page<Goods> page = new Page<>(goodsQuery.getPage(), goodsQuery.getLimit());
+
+
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+
+        // 商品名称查询（条件查询）
+        if(goodsQuery.getGoodsName()!=null && !goodsQuery.getGoodsName().trim().isEmpty()){
+            queryWrapper.like("name",goodsQuery.getGoodsName());
+        }
+        
+        // 商品类别查询(左侧树状图筛选支持)
+        if(goodsQuery.getTypeId()!=null){
+            queryWrapper.eq("type_id",goodsQuery.getTypeId());
+        }
+        
+        // 查询商品列表
+        IPage<Goods> result = goodsService.page(page, queryWrapper);
+
+        // 补充页面需要的非数据库字段
+        for(Goods goods : result.getRecords()){
+
+            // 单位
+            goods.setUnitName(goods.getUnit());
+
+            // 商品类别
+            if(goods.getTypeId()!=null){
+            	
+                GoodsType goodsType = goodsTypeService.getById(goods.getTypeId());
+
+                if(goodsType!=null){
+                    goods.setTypeName(goodsType.getName());
+                }
+            }
+
+            // 销售总数（暂时设置0，后续统计销售表）
+            goods.setSaleTotal(0);
+        }
+
+
+        // Layui返回格式
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("code",0);
+        map.put("msg","");
+        map.put("count",result.getTotal());
+        map.put("data",result.getRecords());
+
+        return map;
     }
 
 

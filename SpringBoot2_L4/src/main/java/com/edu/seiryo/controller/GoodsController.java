@@ -109,22 +109,21 @@ public class GoodsController {
      * 跳转添加/修改商品页面
      */
     @RequestMapping("addOrUpdateGoodsPage")
-    public String addOrUpdateGoodsPage(Integer typeId, Model model){
-    	if(typeId!=null){
-
+    public String addOrUpdateGoodsPage(Integer id, Integer typeId, Model model){
+        // 编辑
+        if(id != null){
+            Goods goods = goodsService.getById(id);
+            model.addAttribute("goods", goods);
+            if(goods.getTypeId()!=null){
+                GoodsType goodsType = goodsTypeService.getById(goods.getTypeId());
+                model.addAttribute("goodsType", goodsType);
+            }
+        } else if(typeId != null) {// 新增选择类别
             GoodsType goodsType = goodsTypeService.getById(typeId);
-
             model.addAttribute("goodsType", goodsType);
         }
+
         return "goods/add_update";
-    }
-    
-    @RequestMapping("toGoodsTypePage")
-    public String toGoodsTypePage(Integer typeId, Model model){
-
-        model.addAttribute("typeId", typeId);
-
-        return "goods/goods_type";
     }
 
    	// 添加商品

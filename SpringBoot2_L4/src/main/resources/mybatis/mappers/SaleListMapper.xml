@@ -140,4 +140,49 @@
         GROUP BY t2.sale_date
     </select>
 
+	<select id="countSaleByMonth" resultType="map">
+
+	    SELECT
+	        TO_CHAR(sl.sale_date,'YYYY-MM') AS "date",
+	
+	        SUM(g.purchasing_price * slg.num) AS "amountCost",
+	
+	        SUM(slg.total) AS "amountSale",
+	
+	        SUM(slg.total) - SUM(g.purchasing_price * slg.num) AS "amountProfit"
+	
+	    FROM t_sale_list sl
+	
+	    LEFT JOIN t_sale_list_goods slg
+	        ON sl.id = slg.sale_list_id
+	
+	    LEFT JOIN t_goods g
+	        ON slg.goods_id = g.id
+	
+	
+	    <where>
+	
+	        <if test="begin != null and begin != ''">
+	            AND sl.sale_date &gt;=
+	            TO_DATE(#{begin},'YYYY-MM')
+	        </if>
+	
+	
+	        <if test="end != null and end != ''">
+	            AND sl.sale_date &lt;
+	            ADD_MONTHS(TO_DATE(#{end},'YYYY-MM'),1)
+	        </if>
+	
+	    </where>
+	
+	
+	    GROUP BY
+	        TO_CHAR(sl.sale_date,'YYYY-MM')
+	
+	
+	    ORDER BY
+	        "date"
+	
+	</select>
+	
 </mapper>

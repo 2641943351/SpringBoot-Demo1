@@ -138,5 +138,67 @@ public class SaleListController {
         return result;
     }
 
+    /**
+     * 月销售统计
+     */
+    @RequestMapping("countSaleByMonth")
+    @ResponseBody
+    public Map<String,Object> countSaleByMonth(String begin,String end){
 
+        if(begin == null || begin.equals("")){
+            begin = DateUtil.formatDate(new java.util.Date(),"yyyy-MM");
+        }
+
+        if(end == null || end.equals("")){
+            end = DateUtil.formatDate(new java.util.Date(),"yyyy-MM");
+        }
+
+        Map<String,Object> result = new HashMap<>();
+
+        List<SaleCount> saleCounts = new ArrayList<>();
+
+        List<Map<String,Object>> list = saleListService.countSaleByMonth(begin,end);
+
+        List<String> months = DateUtil.getRangeMonth(begin,end);
+        
+        for(String month : months){
+
+            SaleCount saleCount = new SaleCount();
+            saleCount.setDate(month);
+
+            boolean flag=true;
+
+            for(Map<String,Object> map:list){
+
+                String saleMonth = map.get("date").toString();
+
+                if(month.equals(saleMonth)){
+
+                    saleCount.setAmountCost(MathUtil.format2Bit(Float.parseFloat(map.get("amountCost").toString())));
+
+                    saleCount.setAmountSale(MathUtil.format2Bit(Float.parseFloat(map.get("amountSale").toString())));
+
+                    saleCount.setAmountProfit(MathUtil.format2Bit(saleCount.getAmountSale() - saleCount.getAmountCost()));
+
+                    flag=false;
+                }
+            }
+
+            if(flag){
+                saleCount.setAmountCost(0F);
+                saleCount.setAmountSale(0F);
+                saleCount.setAmountProfit(0F);
+            }
+
+            saleCounts.add(saleCount);
+        }
+
+        result.put("count",saleCounts.size());
+        result.put("data",saleCounts);
+        result.put("code",0);
+        result.put("msg","");
+
+        return result;
+    }
+    
 }

@@ -28,5 +28,11 @@ public interface SaleListService extends IService<SaleList> {
     Map<String, Object> countSale(SaleListQuery saleListQuery);
 
     List<Map<String, Object>> countDaySale(String begin, String end);
+    
+    /**
+     * 月销售统计
+     */
+    List<Map<String, Object>> countSaleByMonth(String begin, String end);
+
 
 }

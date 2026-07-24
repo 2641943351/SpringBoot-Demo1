@@ -130,5 +130,12 @@ public class SaleListServiceImpl extends ServiceImpl<SaleListMapper, SaleList> i
     public List<Map<String, Object>> countDaySale(String begin, String end) {
         return this.baseMapper.countDaySale(begin,end);
     }
+    
+    @Override
+    public List<Map<String,Object>> countSaleByMonth(String begin,String end){
+
+        return baseMapper.countSaleByMonth(begin,end);
+
+    }
 
 }

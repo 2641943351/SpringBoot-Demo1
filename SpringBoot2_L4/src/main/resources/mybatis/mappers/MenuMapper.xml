@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.seiryo.mapper.MenuMapper">
+	<!-- 查询菜单树 -->
+    <select id="listAllMenu" resultType="com.edu.seiryo.dto.TreeDto">
 
+        SELECT
+            id,
+            p_id AS pId,
+            name,
+            acl_value AS aclValue,
+            url,
+            grade
+        FROM t_menu
+        WHERE NVL(is_del,0)=0
+        ORDER BY grade,id
+
+    </select>
 </mapper>

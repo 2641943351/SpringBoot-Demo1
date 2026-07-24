@@ -25,4 +25,80 @@ import java.util.Map;
 @RequestMapping("/menu")
 public class MenuController {
 
+	@Autowired
+	private MenuService menuService;
+	
+	@RequestMapping("index")
+	public String index() {
+	    return "menu/menu";
+	}
+
+	/**
+	 * 菜单列表
+	 */
+	@RequestMapping("list")
+	@ResponseBody
+	public Map<String,Object> list() {
+
+	    Map<String,Object> result = new HashMap<>();
+
+	    result.put("code",0);
+	    result.put("msg","");
+	    result.put("data",menuService.listAllMenu());
+
+	    return result;
+	}
+	
+	@RequestMapping("addMenuPage")
+	public String addMenuPage(Integer grade, Integer pId, Model model) {
+
+	    model.addAttribute("grade", grade);
+	    model.addAttribute("pId", pId);
+
+	    return "menu/add";
+	}
+	
+	@RequestMapping("save")
+	@ResponseBody
+	public RespBean save(Menu menu) {
+
+	    if (menuService.save(menu)) {
+	        return RespBean.success("保存成功");
+	    }
+
+	    return RespBean.error("保存失败");
+	}
+	
+	@RequestMapping("updateMenuPage")
+	public String updateMenuPage(Integer id, Model model) {
+
+	    Menu menu = menuService.getById(id);
+
+	    model.addAttribute("menu", menu);
+
+	    return "menu/update";
+	}
+	
+	@RequestMapping("update")
+	@ResponseBody
+	public RespBean update(Menu menu) {
+
+	    if(menuService.updateById(menu)){
+	        return RespBean.success("修改成功");
+	    }
+
+	    return RespBean.error("修改失败");
+	}
+	
+	@RequestMapping("delete")
+	@ResponseBody
+	public RespBean delete(Integer id){
+
+	    if(menuService.removeById(id)){
+	        return RespBean.success("删除成功");
+	    }
+
+	    return RespBean.error("删除失败");
+	}
+	
 }

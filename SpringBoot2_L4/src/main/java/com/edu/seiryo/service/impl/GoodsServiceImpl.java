@@ -32,4 +32,59 @@ import java.util.Map;
 @Service
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsService {
 	
+	@Override
+	public Map<String, Object> goodsList(GoodsQuery goodsQuery) {
+	
+	    Page<Goods> page = new Page<>(
+	            goodsQuery.getPage(),
+	            goodsQuery.getLimit());
+	
+	    IPage<Goods> iPage =
+	            baseMapper.goodsList(page, goodsQuery);
+	
+	    return PageResultUtil.setResult(
+	            iPage.getTotal(),
+	            iPage.getRecords());
+	}
+	
+	@Override
+	@Transactional
+	public void updateStock(Goods goods) {
+	
+	    AssertUtil.isTrue(goods.getId()==null,"商品不存在");
+	
+	    Goods dbGoods=getById(goods.getId());
+	
+	    AssertUtil.isTrue(dbGoods==null,"商品不存在");
+	
+	    dbGoods.setInventoryQuantity(goods.getInventoryQuantity());
+	
+	    dbGoods.setPurchasingPrice(goods.getPurchasingPrice());
+	
+	    // 进入期初库存
+	    dbGoods.setState(1);
+	
+	    updateById(dbGoods);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteStock(Integer id) {
+	
+	    Goods goods=getById(id);
+	
+	    AssertUtil.isTrue(goods==null,"商品不存在");
+	
+	    goods.setInventoryQuantity(0);
+	
+	    goods.setPurchasingPrice(0F);
+	
+	    // 恢复初始化状态
+	    goods.setState(0);
+	
+	    updateById(goods);
+	
+	}
+
+	
 }

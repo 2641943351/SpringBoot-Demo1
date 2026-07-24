@@ -10,4 +10,9 @@ import java.util.Map;
 @Mapper
 public interface MenuMapper extends BaseMapper<Menu> {
 
+	/**
+     * 查询所有菜单
+     */
+    List<TreeDto> listAllMenu();
+	
 }

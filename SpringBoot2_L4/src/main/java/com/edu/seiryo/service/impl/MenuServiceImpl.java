@@ -19,5 +19,10 @@ import java.util.Map;
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
+	@Override
+    public List<TreeDto> listAllMenu() {
+        return baseMapper.listAllMenu();
+    }
+	
 }
 

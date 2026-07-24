@@ -12,4 +12,9 @@ import org.apache.ibatis.annotations.Param;
 
 public interface GoodsMapper extends BaseMapper<Goods> {
 
+    /**
+     * 商品分页
+     */
+    IPage<Goods> goodsList(Page<Goods> page,@Param("query") GoodsQuery goodsQuery);
+	
 }
